@@ -20,7 +20,7 @@ const App = () => {
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
-      throw new Error();
+      // throw new Error();
       console.log("Form Data", data);
     } catch (error) {
       // console.error('Error submitting form:', error)
