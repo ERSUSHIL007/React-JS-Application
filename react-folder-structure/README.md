@@ -1,75 +1,75 @@
-# React + TypeScript + Vite
+# React Folder Structure
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React 19 and TypeScript project built with Vite. This project demonstrates a feature-oriented folder structure for keeping UI components, pages, reusable hooks, services, and utility functions organized as an application grows.
 
-Currently, two official plugins are available:
+## Project Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+react-folder-structure/
+├── public/                  # Static files served as-is
+├── src/
+│   ├── assets/              # Images and other imported assets
+│   ├── components/          # Reusable UI components
+│   │   ├── ui/              # Shared UI building blocks
+│   │   └── DeleteAccountModal.tsx
+│   ├── hooks/               # Reusable custom React hooks
+│   │   ├── useCountDown.ts
+│   │   ├── useCurrentUser.ts
+│   │   ├── useDebounce.ts
+│   │   └── useEffectAfterMount.ts
+│   ├── pages/               # Page-level screens and route groups
+│   │   ├── (logged-in)/     # Screens that require authentication
+│   │   └── LoginScreen.tsx
+│   ├── services/            # Application and external-service logic
+│   │   ├── api/             # API clients and requests
+│   │   ├── i18n/            # Internationalization setup
+│   │   ├── providers/       # Shared service providers
+│   │   └── state/           # Application state management
+│   ├── utils/               # Small, reusable helper functions
+│   │   ├── formatting.ts
+│   │   └── helper.ts
+│   ├── App.tsx              # Root application component
+│   ├── App.css              # App-specific styles
+│   ├── index.css            # Global styles
+│   └── main.tsx             # Application entry point
+├── index.html
+├── package.json
+├── tsconfig*.json
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Folder Responsibilities
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **`components`** contains reusable presentation components that can be shared by multiple pages.
+- **`hooks`** contains custom hooks that encapsulate reusable stateful or lifecycle behavior.
+- **`pages`** contains complete screens. The `(logged-in)` folder groups pages that belong to an authenticated part of the application.
+- **`services`** contains integrations and application-wide concerns such as API calls, localization, providers, and state.
+- **`utils`** contains stateless helpers that do not depend on React rendering.
+- **`assets`** contains images and other files imported by the application.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Getting Started
 
+From this directory, install dependencies and start the development server:
+
+```bash
+npm install
+npm run dev
 ```
+
+The app is served by Vite with hot module replacement enabled. The current `App.tsx` contains the starter screen and can be replaced as the example application is developed.
+
+## Available Scripts
+
+```bash
+npm run dev      # Start the development server
+npm run build    # Type-check and create a production build
+npm run lint     # Run ESLint
+npm run preview  # Preview the production build locally
+```
+
+## Technology
+
+- React 19
+- TypeScript
+- Vite
+- ESLint
