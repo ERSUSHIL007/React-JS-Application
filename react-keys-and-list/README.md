@@ -1,75 +1,48 @@
-# React + TypeScript + Vite
+# React Key and List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates how React handles repeated elements in a list and why each item needs a unique `key`.
 
-Currently, two official plugins are available:
+## Why keys are important
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+When you render a list with `map()`, React needs a stable identity for each item so it can efficiently update the DOM when the list changes.
 
-## React Compiler
+Without a key, React may:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- reuse the wrong elements while re-rendering
+- cause UI bugs when items are added, removed, or reordered
+- make state updates behave unexpectedly
 
-## Expanding the ESLint configuration
+## Example
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```tsx
+{
+  users.map((user) => (
+    <button
+      key={user.id}
+      onClick={() => setUsers(users.filter((u) => u.id !== user.id))}
+    >
+      {user.name}
+    </button>
+  ));
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+In this example, each user is rendered as a button and the `key={user.id}` gives React a unique identity for each item.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Best practices for keys
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Use a unique and stable value, such as an `id`
+- Avoid using indexes as keys when the list can change
+- Keep keys consistent across renders
 
-```
+## What this app does
+
+This app displays a list of users and allows clicking a user to remove them from the list. The list is updated using `setUsers()`, and the `key` helps React track the correct UI element during the update.
+
+## Core concept
+
+React uses keys to decide which elements correspond to which data items. This helps it avoid unnecessary re-renders and preserves the correct state for each item in the list.
+
+## Summary
+
+A key is not just for React internals; it is essential for predictable rendering and correct behavior when lists change.
