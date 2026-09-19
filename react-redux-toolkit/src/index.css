@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@700&display=swap');
+
+:root {
+	font-family: 'DM Sans', sans-serif;
+	color: #f4f7fb;
+	background: #101820;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	min-width: 320px;
+	min-height: 100vh;
+	margin: 0;
+	background:
+		radial-gradient(circle at 15% 10%, rgba(255, 190, 92, 0.2), transparent 32%),
+		linear-gradient(135deg, #101820 0%, #172c35 55%, #213b3d 100%);
+}
+
+#root {
+	display: grid;
+	min-height: 100vh;
+	place-items: center;
+	padding: 2rem;
+}
+
+#root > div {
+	width: min(100%, 38rem);
+	text-align: center;
+}
+
+#root > div > h1 {
+	margin: 0 0 1.5rem;
+	color: #f7c873;
+	font-size: clamp(1.5rem, 4vw, 2.25rem);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.counter-card {
+	padding: clamp(2rem, 6vw, 3.5rem);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: 1.25rem;
+	background: rgba(19, 32, 39, 0.86);
+	box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.28);
+}
+
+.counter-label {
+	margin: 0 0 0.5rem;
+	color: #8ed6c1;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.counter-title {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 500;
+}
+
+.counter-value {
+	margin: 1.25rem 0 2rem;
+	color: #f7c873;
+	font-family: 'Space Mono', monospace;
+	font-size: clamp(4rem, 16vw, 7rem);
+	line-height: 1;
+}
+
+.counter-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.75rem;
+}
+
+.counter-button {
+	min-width: 8.5rem;
+	padding: 0.8rem 1.25rem;
+	border: 1px solid transparent;
+	border-radius: 0.65rem;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+	transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.counter-button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
+}
+
+.counter-button:focus-visible {
+	outline: 3px solid #8ed6c1;
+	outline-offset: 3px;
+}
+
+.counter-button--primary {
+	color: #172c35;
+	background: #f7c873;
+}
+
+.counter-button--primary:hover {
+	background: #ffda8e;
+}
+
+.counter-button--secondary {
+	color: #f4f7fb;
+	border-color: rgba(142, 214, 193, 0.55);
+	background: transparent;
+}
+
+.counter-button--secondary:hover {
+	background: rgba(142, 214, 193, 0.12);
+}
+
+@media (max-width: 420px) {
+	#root {
+		padding: 1rem;
+	}
+
+	.counter-button {
+		width: 100%;
+	}
+}
