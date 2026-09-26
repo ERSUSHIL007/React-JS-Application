@@ -1,0 +1,151 @@
+:root {
+	font-family: Georgia, "Times New Roman", serif;
+	color: #183b35;
+	background: #e9f5ee;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	min-width: 320px;
+	min-height: 100vh;
+	margin: 0;
+}
+
+button {
+	font: inherit;
+}
+
+.effect {
+	display: grid;
+	min-height: 100vh;
+	place-items: center;
+	padding: 24px;
+	background-image: radial-gradient(#b5d9c2 0.8px, transparent 0.8px);
+	background-size: 20px 20px;
+}
+
+.effect__panel {
+	width: min(100%, 460px);
+	padding: 48px 36px;
+	border: 1px solid #c9e0d0;
+	border-radius: 8px;
+	background: #fbfdf9;
+	box-shadow: 0 20px 55px rgb(24 59 53 / 12%);
+	text-align: center;
+	animation: panel-enter 450ms ease-out both;
+}
+
+.effect__eyebrow,
+.effect__count-label {
+	margin: 0;
+	color: #50766a;
+	font-family: Arial, sans-serif;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.effect__title {
+	margin: 10px 0 32px;
+	font-size: clamp(1.8rem, 8vw, 2.5rem);
+	font-weight: 500;
+}
+
+.effect__count-label {
+	margin-bottom: 4px;
+}
+
+.effect__count {
+	margin: 0 0 32px;
+	color: #12745b;
+	font-size: 5rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.1;
+}
+
+.effect__actions {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+}
+
+.effect__button {
+	min-height: 46px;
+	padding: 0 20px;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	cursor: pointer;
+	font-family: Arial, sans-serif;
+	font-size: 0.9rem;
+	font-weight: 700;
+	transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.effect__button:hover {
+	transform: translateY(-2px);
+}
+
+.effect__button:active {
+	transform: translateY(0);
+}
+
+.effect__button:focus-visible {
+	outline: 3px solid #f2a65a;
+	outline-offset: 3px;
+}
+
+.effect__button--decrement {
+	border-color: #b8cec2;
+	background: transparent;
+	color: #31574b;
+}
+
+.effect__button--decrement:hover {
+	background: #edf5ef;
+}
+
+.effect__button--increment {
+	background: #14745b;
+	color: #fff;
+}
+
+.effect__button--increment:hover {
+	background: #0e5d49;
+}
+
+@keyframes panel-enter {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 420px) {
+	.effect__panel {
+		padding: 38px 20px;
+	}
+
+	.effect__actions {
+		flex-direction: column-reverse;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Error Handling in React</title>
+    <style>
+      @page { size: A4; margin: 18mm 17mm; }
+      * { box-sizing: border-box; }
+      body { margin: 0; color: #213b34; font: 10.5pt/1.55 "Segoe UI", Arial, sans-serif; }
+      h1, h2, h3 { color: #164f40; }
+      h1 { margin: 0 0 8px; font: 30pt/1.1 Georgia, serif; }
+      h2 { margin: 23px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #d5e2da; font: 19pt Georgia, serif; break-after: avoid; }
+      h3 { margin: 15px 0 5px; font-size: 12pt; break-after: avoid; }
+      p { margin: 7px 0 10px; }
+      .kicker { color: #ad4c3d; font-size: 9pt; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+      .intro { max-width: 650px; color: #50665d; font-size: 12pt; }
+      .rule { width: 55px; height: 4px; margin: 18px 0; background: #df8d48; }
+      table { width: 100%; margin: 12px 0; border-collapse: collapse; font-size: 9.5pt; }
+      th, td { padding: 7px 9px; border: 1px solid #d5e2da; text-align: left; vertical-align: top; }
+      th { background: #edf4ef; color: #164f40; }
+      pre { margin: 9px 0 13px; padding: 12px 14px; overflow-wrap: anywhere; border-left: 3px solid #df8d48; background: #f1f5f2; color: #243c35; font: 8.3pt/1.45 Consolas, "Courier New", monospace; white-space: pre-wrap; break-inside: avoid; }
+      code { font-family: Consolas, "Courier New", monospace; }
+      ul { padding-left: 20px; }
+      li { margin: 4px 0; }
+      .note { padding: 10px 13px; border-left: 3px solid #176b55; background: #eff5f0; }
+      footer { margin-top: 25px; padding-top: 8px; border-top: 1px solid #d5e2da; color: #64766e; font-size: 8pt; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="kicker">React application patterns</p>
+      <h1>Error Handling in React</h1>
+      <div class="rule"></div>
+      <p class="intro">Choose the handler that matches where a failure occurs. Give users a useful recovery path while keeping implementation details out of the interface.</p>
+    </header>
+
+    <h2>Match the Failure</h2>
+    <table>
+      <thead><tr><th>Failure</th><th>Handler</th></tr></thead>
+      <tbody>
+        <tr><td>Component throws while rendering</td><td>React Error Boundary</td></tr>
+        <tr><td>Route loader, action, or route rendering fails</td><td>React Router <code>errorElement</code></td></tr>
+        <tr><td>Event handler or asynchronous task fails</td><td><code>try/catch</code> where the work starts</td></tr>
+        <tr><td>Invalid user input</td><td>Validation and field-level feedback</td></tr>
+        <tr><td>HTTP request returns a failure status</td><td>Check <code>response.ok</code> and handle it</td></tr>
+      </tbody>
+    </table>
+    <p class="note">A React Error Boundary does not catch errors from event handlers, timers, or asynchronous callbacks. Handle those at their source. It also cannot catch errors thrown by the boundary itself.</p>
+
+    <h2>React Error Boundary</h2>
+    <p>A boundary catches errors in descendant rendering, constructors, and lifecycle methods. This app's top-level boundary replaces a broken screen with a recovery message and logs diagnostic details.</p>
+    <pre>import { Component, type ErrorInfo, type ReactNode } from "react";
+
+type Props = { children: ReactNode };
+type State = { hasError: boolean };
+
+class AppErrorBoundary extends Component&lt;Props, State&gt; {
+  state: State = { hasError: false };
+
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("Uncaught rendering error", error, info.componentStack);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return &lt;p role="alert"&gt;Something went wrong. Reload to try again.&lt;/p&gt;;
+    }
+    return this.props.children;
+  }
+}</pre>
+    <p><code>getDerivedStateFromError</code> selects the fallback UI. <code>componentDidCatch</code> is for diagnostics or reporting to a monitoring service. Do not expose stack traces or sensitive error details to users.</p>
+
+    <h2>React Router Route Errors</h2>
+    <p>Data routers render the nearest route error boundary when a loader, action, or route component fails. Use <code>useRouteError</code> to read the error and <code>isRouteErrorResponse</code> to identify expected route response errors.</p>
+    <pre>import { isRouteErrorResponse, useRouteError } from "react-router";
+
+function RouteErrorPage() {
+  const error = useRouteError();
+  if (isRouteErrorResponse(error)) {
+    return &lt;h1&gt;{error.status}: {error.statusText}&lt;/h1&gt;;
+  }
+  return &lt;h1&gt;We could not load this page.&lt;/h1&gt;;
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: &lt;HomePage /&gt;,
+    loader: loadHomeData,
+    errorElement: &lt;RouteErrorPage /&gt;,
+  },
+]);</pre>
+    <p>Use route boundaries for navigation-level recovery. Add a wildcard route for unmatched URLs and give users a clear destination, such as returning home.</p>
+
+    <h2>Async and Event Errors</h2>
+    <p>Promise rejections must be caught by the async task. Also note that <code>fetch</code> resolves for HTTP errors such as 404 and 500, so check <code>response.ok</code>.</p>
+    <pre>async function loadProfile() {
+  try {
+    const response = await fetch("/api/profile");
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
+    const profile = await response.json();
+    setProfile(profile);
+    setError(null);
+  } catch {
+    setError("Profile could not be loaded. Please try again.");
+  }
+}</pre>
+    <p>For expected network failures, show loading and error states and preserve user data where possible. Save Error Boundaries for unexpected failures that prevent part of the UI from rendering.</p>
+
+    <h2>Try the App Demo</h2>
+    <ul>
+      <li>Choose <strong>Trigger a loader error</strong> to view the React Router route error screen.</li>
+      <li>Visit an unknown URL to view the not-found page.</li>
+      <li>Rendering errors below the router are handled by the top-level React Error Boundary.</li>
+    </ul>
+    <footer>React Error Handling Guide | Companion to the routing-react-app example</footer>
+  </body>
+</html>
